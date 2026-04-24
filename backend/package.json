@@ -18,7 +18,8 @@
     "express": "^4.18.2",
     "helmet": "^7.1.0",
     "mysql2": "^3.6.5",
-    "redis": "^5.11.0"
+    "redis": "^5.11.0",
+    "tsx": "^4.7.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",
@@ -30,7 +31,6 @@
     "@typescript-eslint/parser": "^6.14.0",
     "eslint": "^8.55.0",
     "supertest": "^7.2.2",
-    "tsx": "^4.7.0",
     "typescript": "^5.2.2",
     "vitest": "^1.0.4"
   }
