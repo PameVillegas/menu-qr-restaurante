@@ -1,54 +1,39 @@
 import { query } from '../utils/db.js';
-import { Table, CreateTableDTO, ResultSetHeader } from '../models/types.js';
+import { Table, CreateTableDTO } from './types.js';
 
-export const tableModel = {
-  async findByRestaurant(restaurantId: number): Promise<Table[]> {
-    const [rows] = await query<Table[]>(
-      'SELECT * FROM tables WHERE restaurant_id = ? AND is_active = 1 ORDER BY number',
-      [restaurantId]
-    );
-    return rows;
-  },
-
-  async findById(id: number): Promise<Table | null> {
-    const [rows] = await query<Table[]>(
-      'SELECT * FROM tables WHERE id = ?',
-      [id]
-    );
-    return rows[0] || null;
-  },
-
-  async findByQrCode(qrCode: string): Promise<Table | null> {
-    const [rows] = await query<Table[]>(
-      'SELECT t.*, r.name as restaurant_name, r.slug as restaurant_slug FROM tables t JOIN restaurants r ON t.restaurant_id = r.id WHERE t.qr_code = ? AND t.is_active = 1 AND r.is_active = 1',
-      [qrCode]
-    );
-    return rows[0] || null;
-  },
-
-  async create(data: CreateTableDTO): Promise<number> {
-    const qrCode = `${data.restaurant_id}-${data.number}-${Date.now()}`;
-    const [result] = await query<ResultSetHeader>(
-      'INSERT INTO tables (restaurant_id, number, qr_code) VALUES (?, ?, ?)',
-      [data.restaurant_id, data.number, qrCode]
-    );
-    return result.insertId;
-  },
-
-  async createBulk(restaurantId: number, numbers: string[]): Promise<number> {
-    let inserted = 0;
-    for (const number of numbers) {
-      await this.create({ restaurant_id: restaurantId, number });
-      inserted++;
-    }
-    return inserted;
-  },
-
-  async delete(id: number): Promise<boolean> {
-    const [result] = await query<ResultSetHeader>(
-      'UPDATE tables SET is_active = 0 WHERE id = ?',
-      [id]
-    );
-    return result.affectedRows > 0;
-  },
+export const getTables = async (restaurantId: number): Promise<Table[]> => {
+  const result = await query('SELECT * FROM tables WHERE restaurant_id = $1 AND is_active = 1 ORDER BY number', [restaurantId]);
+  return result.rows as Table[];
 };
+
+export const getTableById = async (id: number): Promise<Table | null> => {
+  const result = await query('SELECT * FROM tables WHERE id = $1', [id]);
+  return (result.rows[0] as Table) || null;
+};
+
+export const createTable = async (data: CreateTableDTO): Promise<Table> => {
+  const result = await query(
+    'INSERT INTO tables (restaurant_id, number, qr_code) VALUES ($1, $2, $3) RETURNING *',
+    [data.restaurant_id, data.number, `MESA-${data.number}`]
+  );
+  return result.rows[0] as Table;
+};
+
+export const updateTable = async (id: number, data: Partial<CreateTableDTO>): Promise<Table> => {
+  const fields: string[] = [];
+  const values: unknown[] = [];
+  let i = 1;
+  
+  if (data.number !== undefined) { fields.push(`number = $${i++}`); values.push(data.number); }
+  if (data.qr_code !== undefined) { fields.push(`qr_code = $${i++}`); values.push(data.qr_code); }
+  
+  values.push(id);
+  const result = await query(`UPDATE tables SET ${fields.join(', ')} WHERE id = $${i} RETURNING *`, values);
+  return result.rows[0] as Table;
+};
+
+export const deleteTable = async (id: number): Promise<void> => {
+  await query('UPDATE tables SET is_active = 0 WHERE id = $1', [id]);
+};
+
+export default { getTables, getTableById, createTable, updateTable, deleteTable };

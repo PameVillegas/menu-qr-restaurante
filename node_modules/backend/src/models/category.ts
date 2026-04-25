@@ -1,72 +1,42 @@
 import { query } from '../utils/db.js';
-import { Category, CreateCategoryDTO, ResultSetHeader } from '../models/types.js';
+import { Category, CreateCategoryDTO } from './types.js';
 
-export const categoryModel = {
-  async findByRestaurant(restaurantId: number): Promise<Category[]> {
-    const [rows] = await query<Category[]>(
-      'SELECT * FROM categories WHERE restaurant_id = ? AND is_active = 1 ORDER BY sort_order, name',
-      [restaurantId]
-    );
-    return rows;
-  },
-
-  async findById(id: number): Promise<Category | null> {
-    const [rows] = await query<Category[]>(
-      'SELECT * FROM categories WHERE id = ?',
-      [id]
-    );
-    return rows[0] || null;
-  },
-
-  async create(data: CreateCategoryDTO): Promise<number> {
-    const [result] = await query<ResultSetHeader>(
-      `INSERT INTO categories (restaurant_id, name, description, image_url, sort_order)
-       VALUES (?, ?, ?, ?, ?)`,
-      [
-        data.restaurant_id,
-        data.name,
-        data.description || null,
-        data.image_url || null,
-        data.sort_order || 0,
-      ]
-    );
-    return result.insertId;
-  },
-
-  async update(id: number, data: Partial<CreateCategoryDTO>): Promise<boolean> {
-    const fields: string[] = [];
-    const values: unknown[] = [];
-
-    if (data.name !== undefined) { fields.push('name = ?'); values.push(data.name); }
-    if (data.description !== undefined) { fields.push('description = ?'); values.push(data.description); }
-    if (data.image_url !== undefined) { fields.push('image_url = ?'); values.push(data.image_url); }
-    if (data.sort_order !== undefined) { fields.push('sort_order = ?'); values.push(data.sort_order); }
-
-    if (fields.length === 0) return false;
-
-    values.push(id);
-    const [result] = await query<ResultSetHeader>(
-      `UPDATE categories SET ${fields.join(', ')}, updated_at = NOW() WHERE id = ?`,
-      values
-    );
-    return result.affectedRows > 0;
-  },
-
-  async delete(id: number): Promise<boolean> {
-    const [result] = await query<ResultSetHeader>(
-      'UPDATE categories SET is_active = 0, updated_at = NOW() WHERE id = ?',
-      [id]
-    );
-    return result.affectedRows > 0;
-  },
-
-  async reorder(restaurantId: number, categoryIds: number[]): Promise<boolean> {
-    for (let i = 0; i < categoryIds.length; i++) {
-      await query<ResultSetHeader>(
-        'UPDATE categories SET sort_order = ? WHERE id = ? AND restaurant_id = ?',
-        [i, categoryIds[i], restaurantId]
-      );
-    }
-    return true;
-  },
+export const getCategories = async (restaurantId: number): Promise<Category[]> => {
+  const result = await query('SELECT * FROM categories WHERE restaurant_id = $1 AND is_active = 1 ORDER BY sort_order, name', [restaurantId]);
+  return result.rows as Category[];
 };
+
+export const getCategoryById = async (id: number): Promise<Category | null> => {
+  const result = await query('SELECT * FROM categories WHERE id = $1', [id]);
+  return (result.rows[0] as Category) || null;
+};
+
+export const createCategory = async (data: CreateCategoryDTO): Promise<Category> => {
+  const result = await query(
+    `INSERT INTO categories (restaurant_id, name, description, image_url, sort_order) 
+     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+    [data.restaurant_id, data.name, data.description, data.image_url, data.sort_order || 0]
+  );
+  return result.rows[0] as Category;
+};
+
+export const updateCategory = async (id: number, data: Partial<CreateCategoryDTO>): Promise<Category> => {
+  const fields: string[] = [];
+  const values: unknown[] = [];
+  let i = 1;
+  
+  if (data.name !== undefined) { fields.push(`name = $${i++}`); values.push(data.name); }
+  if (data.description !== undefined) { fields.push(`description = $${i++}`); values.push(data.description); }
+  if (data.image_url !== undefined) { fields.push(`image_url = $${i++}`); values.push(data.image_url); }
+  if (data.sort_order !== undefined) { fields.push(`sort_order = $${i++}`); values.push(data.sort_order); }
+  
+  values.push(id);
+  const result = await query(`UPDATE categories SET ${fields.join(', ')} WHERE id = $${i} RETURNING *`, values);
+  return result.rows[0] as Category;
+};
+
+export const deleteCategory = async (id: number): Promise<void> => {
+  await query('UPDATE categories SET is_active = 0 WHERE id = $1', [id]);
+};
+
+export default { getCategories, getCategoryById, createCategory, updateCategory, deleteCategory };

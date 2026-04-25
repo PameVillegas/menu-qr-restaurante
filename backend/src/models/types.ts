@@ -1,76 +1,94 @@
-import { RowDataPacket, ResultSetHeader } from 'mysql2/promise';
-
-export interface Restaurant extends RowDataPacket {
+export interface Restaurant {
   id: number;
   name: string;
   slug: string;
   description: string | null;
   address: string | null;
   phone: string | null;
+  email: string | null;
   logo_url: string | null;
   banner_url: string | null;
-  theme_primary: string;
-  theme_secondary: string;
-  is_active: number;
+  primary_color: string;
+  secondary_color: string;
+  is_active: boolean;
   created_at: Date;
   updated_at: Date;
 }
 
-export interface Category extends RowDataPacket {
+export interface Category {
   id: number;
   restaurant_id: number;
   name: string;
   description: string | null;
   image_url: string | null;
   sort_order: number;
-  is_active: number;
+  is_active: boolean;
   created_at: Date;
   updated_at: Date;
 }
 
-export interface Product extends RowDataPacket {
+export interface Product {
   id: number;
   category_id: number;
-  restaurant_id: number;
   name: string;
   description: string | null;
   price: number;
   image_url: string | null;
-  is_available: number;
+  is_available: boolean;
   sort_order: number;
-  has_variants: number;
   created_at: Date;
   updated_at: Date;
 }
 
-export interface ProductVariant extends RowDataPacket {
+export interface ProductVariant {
   id: number;
   product_id: number;
   name: string;
-  price_modifier: number;
-  is_available: number;
+  price: number;
   created_at: Date;
 }
 
-export interface Table extends RowDataPacket {
+export interface Table {
   id: number;
   restaurant_id: number;
-  number: string;
-  qr_code: string;
-  is_active: number;
+  number: number;
+  qr_code: string | null;
+  is_active: boolean;
   created_at: Date;
+  updated_at: Date;
+}
+
+export interface OrderItem {
+  id: number;
+  order_id: number;
+  product_id: number;
+  product_name: string;
+  quantity: number;
+  unit_price: number;
+  subtotal: number;
+  notes: string | null;
+}
+
+export interface Order {
+  id: number;
+  restaurant_id: number;
+  table_id: number;
+  customer_name: string;
+  status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'delivered' | 'cancelled';
+  total: number;
+  tip_amount: number;
+  notes: string | null;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface CreateRestaurantDTO {
   name: string;
-  slug: string;
+  slug?: string;
   description?: string;
   address?: string;
   phone?: string;
-  logo_url?: string;
-  banner_url?: string;
-  theme_primary?: string;
-  theme_secondary?: string;
+  email?: string;
 }
 
 export interface CreateCategoryDTO {
@@ -83,27 +101,20 @@ export interface CreateCategoryDTO {
 
 export interface CreateProductDTO {
   category_id: number;
-  restaurant_id: number;
   name: string;
   description?: string;
   price: number;
   image_url?: string;
   is_available?: boolean;
   sort_order?: number;
-  has_variants?: boolean;
-  variants?: { name: string; price_modifier: number }[];
 }
 
 export interface CreateTableDTO {
   restaurant_id: number;
-  number: string;
+  number: number;
 }
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  message?: string;
+export interface QueryResult {
+  rowCount: number;
+  rows: unknown[];
 }
-
-export { ResultSetHeader };

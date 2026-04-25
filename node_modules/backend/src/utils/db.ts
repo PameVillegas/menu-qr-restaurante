@@ -1,41 +1,31 @@
-import mysql, { Pool, RowDataPacket, ResultSetHeader } from 'mysql2/promise';
+import { Pool } from 'pg';
 import { config } from './config.js';
 
-export const pool: Pool = mysql.createPool({
-  host: config.database.host,
-  port: config.database.port,
-  database: config.database.name,
-  user: config.database.user,
-  password: config.database.password,
-  waitForConnections: true,
-  connectionLimit: 20,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0,
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
-pool.getConnection()
-  .then(() => console.log('Database connection established'))
-  .catch((err) => console.error('Database connection failed:', err));
+pool.on('connect', () => console.log('Database connection established'));
 
-export const query = async (
-  sql: string,
-  params?: unknown[]
-): Promise<[RowDataPacket[], ResultSetHeader]> => {
+pool.on('error', (err) => console.error('Database connection error:', err));
+
+export const query = async (sql: string, params?: unknown[]) => {
   const start = Date.now();
   try {
-    const [rows, result]: any = await pool.query(sql, params);
+    const result = await pool.query(sql, params);
     const duration = Date.now() - start;
-    console.log('Executed query', { sql, duration, affectedRows: result?.affectedRows });
-    return [rows as RowDataPacket[], result as ResultSetHeader];
+    console.log('Executed query', { sql, duration, rowCount: result.rowCount });
+    return result;
   } catch (error) {
     console.error('Query error', { sql, error });
     throw error;
   }
 };
 
-export const getConnection = async () => {
-  return pool.getConnection();
-};
+export const getClient = () => pool.connect();
 
 export default pool;
