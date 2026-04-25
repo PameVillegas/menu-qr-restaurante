@@ -1,5 +1,4 @@
 import { Pool } from 'pg';
-import { config } from './config.js';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -10,7 +9,6 @@ const pool = new Pool({
 });
 
 pool.on('connect', () => console.log('Database connection established'));
-
 pool.on('error', (err) => console.error('Database connection error:', err));
 
 export const query = async (sql: string, params?: unknown[]) => {
@@ -27,5 +25,6 @@ export const query = async (sql: string, params?: unknown[]) => {
 };
 
 export const getClient = () => pool.connect();
+export const dbPool = pool;
 
 export default pool;
