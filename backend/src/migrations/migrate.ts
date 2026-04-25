@@ -87,11 +87,11 @@ CREATE TABLE IF NOT EXISTS reviews (
 );
 `;
 
-async function runMigrations() {
+export async function runMigrations() {
   console.log('Running migrations...');
   try {
     await pool.query(migrations);
-    console.log('Migrations completed successfully');
+    console.log('Tables created');
     
     const restaurantCheck = await pool.query('SELECT COUNT(*) FROM restaurants');
     if (parseInt(restaurantCheck.rows[0].count) === 0) {
@@ -115,49 +115,21 @@ async function runMigrations() {
       
       for (const cat of catResult.rows) {
         if (cat.name === 'Entradas') {
-          await pool.query(`
-            INSERT INTO products (category_id, name, price) VALUES
-            ($1, 'Empanadas (6 unidades)', 1200),
-            ($1, 'Bruschettas', 1800);
-          `, [cat.id]);
+          await pool.query(`INSERT INTO products (category_id, name, price) VALUES ($1, 'Empanadas (6 unidades)', 1200), ($1, 'Bruschettas', 1800);`, [cat.id]);
         } else if (cat.name === 'Principales') {
-          await pool.query(`
-            INSERT INTO products (category_id, name, price) VALUES
-            ($1, 'Milanesa con puré', 3500),
-            ($1, 'Pastas caseras', 2800),
-            ($1, 'Bife de chorizo', 4200);
-          `, [cat.id]);
+          await pool.query(`INSERT INTO products (category_id, name, price) VALUES ($1, 'Milanesa con puré', 3500), ($1, 'Pastas caseras', 2800), ($1, 'Bife de chorizo', 4200);`, [cat.id]);
         } else if (cat.name === 'Bebidas') {
-          await pool.query(`
-            INSERT INTO products (category_id, name, price) VALUES
-            ($1, 'Gaseosa', 500),
-            ($1, 'Jugo natural', 800),
-            ($1, 'Agua mineral', 400);
-          `, [cat.id]);
+          await pool.query(`INSERT INTO products (category_id, name, price) VALUES ($1, 'Gaseosa', 500), ($1, 'Jugo natural', 800), ($1, 'Agua mineral', 400);`, [cat.id]);
         } else if (cat.name === 'Postres') {
-          await pool.query(`
-            INSERT INTO products (category_id, name, price) VALUES
-            ($1, 'Flan casero', 900),
-            ($1, 'Helado artesanal', 1100);
-          `, [cat.id]);
+          await pool.query(`INSERT INTO products (category_id, name, price) VALUES ($1, 'Flan casero', 900), ($1, 'Helado artesanal', 1100);`, [cat.id]);
         }
       }
       
-      await pool.query(`
-        INSERT INTO tables (restaurant_id, number, qr_code) VALUES
-        ($1, 1, 'QR-MESA-1'),
-        ($1, 2, 'QR-MESA-2'),
-        ($1, 3, 'QR-MESA-3');
-      `, [restaurantId]);
-      
-      console.log('Sample data created successfully');
+      await pool.query(`INSERT INTO tables (restaurant_id, number, qr_code) VALUES ($1, 1, 'QR-MESA-1'), ($1, 2, 'QR-MESA-2'), ($1, 3, 'QR-MESA-3');`, [restaurantId]);
+      console.log('Sample data created');
     }
-    
-    process.exit(0);
+    console.log('Migrations complete');
   } catch (err) {
     console.error('Migration failed:', err);
-    process.exit(1);
   }
 }
-
-runMigrations();

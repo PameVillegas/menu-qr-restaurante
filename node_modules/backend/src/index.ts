@@ -7,46 +7,34 @@ import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import apiRoutes from './routes/index.js';
 import pool from './utils/db.js';
+import { runMigrations } from './migrations/migrate.js';
 
 const app = express();
 
-// Security middleware
 app.use(helmet());
-
-// CORS configuration
-app.use(cors({
-  origin: config.cors.origin,
-  credentials: true
-}));
-
-// Compression middleware
+app.use(cors({ origin: config.cors.origin, credentials: true }));
 app.use(compression());
-
-// Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Request logging
 app.use(requestLogger);
 
-// API routes
 app.use('/api', apiRoutes);
-
-// 404 handler
 app.use(notFoundHandler);
-
-// Error handler (must be last)
 app.use(errorHandler);
 
-// Start server
-app.listen(config.port, () => {
-  console.log(`🚀 Server running on port ${config.port}`);
-  console.log(`📝 Environment: ${config.nodeEnv}`);
-  console.log(`🌐 CORS origin: ${config.cors.origin}`);
-  console.log(`💾 Database: ${config.database.host}:${config.database.port}/${config.database.name}`);
-});
+async function start() {
+  console.log('Running database migrations...');
+  await runMigrations();
+  console.log('Migrations complete. Starting server...');
+  
+  app.listen(config.port, () => {
+    console.log(`🚀 Server running on port ${config.port}`);
+    console.log(`📝 Environment: ${config.nodeEnv}`);
+    console.log(`🌐 CORS origin: ${config.cors.origin}`);
+    console.log(`💾 Database: PostgreSQL`);
+  });
+}
 
-// Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('SIGTERM signal received: closing HTTP server');
   await pool.end();
@@ -58,5 +46,7 @@ process.on('SIGINT', async () => {
   await pool.end();
   process.exit(0);
 });
+
+start();
 
 export default app;
