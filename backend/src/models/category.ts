@@ -3,7 +3,7 @@ import { Category, CreateCategoryDTO } from './types.js';
 
 export const categoryModel = {
   findByRestaurant: async (restaurantId: number): Promise<Category[]> => {
-    const result = await query('SELECT * FROM categories WHERE restaurant_id = $1 AND is_active = 1 ORDER BY sort_order, name', [restaurantId]);
+    const result = await query('SELECT * FROM categories WHERE restaurant_id = $1 AND is_active = true ORDER BY sort_order, name', [restaurantId]);
     return result.rows as Category[];
   },
   findById: async (id: number): Promise<Category | null> => {

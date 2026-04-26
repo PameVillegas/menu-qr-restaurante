@@ -3,7 +3,7 @@ import { Restaurant, CreateRestaurantDTO } from './types.js';
 
 export const restaurantModel = {
   findAll: async (): Promise<Restaurant[]> => {
-    const result = await query('SELECT * FROM restaurants WHERE is_active = 1 ORDER BY name');
+    const result = await query('SELECT * FROM restaurants WHERE is_active = true ORDER BY name');
     return result.rows as Restaurant[];
   },
   findById: async (id: number): Promise<Restaurant | null> => {

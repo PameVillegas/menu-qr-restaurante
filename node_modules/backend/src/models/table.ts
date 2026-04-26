@@ -3,7 +3,7 @@ import { Table, CreateTableDTO } from './types.js';
 
 export const tableModel = {
   findByRestaurant: async (restaurantId: number): Promise<Table[]> => {
-    const result = await query('SELECT * FROM tables WHERE restaurant_id = $1 AND is_active = 1 ORDER BY number', [restaurantId]);
+    const result = await query('SELECT * FROM tables WHERE restaurant_id = $1 AND is_active = true ORDER BY number', [restaurantId]);
     return result.rows as Table[];
   },
   findById: async (id: number): Promise<Table | null> => {
