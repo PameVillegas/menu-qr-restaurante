@@ -1,8 +1,8 @@
 {
-  "buildCommand": "cd frontend && npm install && npx vite build",
+  "installCommand": "rm -rf node_modules frontend/node_modules && cd frontend && npm install",
+  "buildCommand": "cd frontend && node node_modules/vite/bin/vite.js build",
   "outputDirectory": "frontend/dist",
   "framework": "vite",
-  "installCommand": "cd frontend && npm install",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
