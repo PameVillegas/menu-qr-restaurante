@@ -2,16 +2,12 @@
   "name": "menu-digital-qr",
   "version": "1.0.0",
   "private": true,
-  "description": "Sistema de menú digital para restaurantes accesible mediante código QR",
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
+  "description": "Sistema de menú digital para restaurantes accesible mediante códigos QR",
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev:backend": "npm run dev --workspace=backend",
-    "build": "npm run build --workspaces",
+    "build": "cd frontend && npm install && npm run build",
     "build:frontend": "npm run build --workspace=frontend",
     "build:backend": "npm run build --workspace=backend",
     "test": "npm run test --workspaces",
