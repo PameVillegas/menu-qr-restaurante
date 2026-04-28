@@ -49,3 +49,4 @@ export const api = {
     delete: (id: number) => fetchApi<void>(`/products/${id}`, { method: 'DELETE' }),
   },
 };
+ 
