@@ -1,6 +1,6 @@
 import { ApiResponse, Restaurant, Category, Product, CreateRestaurantDTO, CreateCategoryDTO, CreateProductDTO } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE = 'https://menu-qr-rest.onrender.com/api';
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${endpoint}`, {
