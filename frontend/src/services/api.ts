@@ -1,7 +1,6 @@
 import { ApiResponse, Restaurant, Category, Product, CreateRestaurantDTO, CreateCategoryDTO, CreateProductDTO } from '../types';
 
-// API Base URL - PRODUCTION - do not change
-const API_BASE = 'https://menu-qr-rest.onrender.com/api';
+const API_BASE = 'https://menu-qr-rest.onrender.com/api/v2'; // v2
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${endpoint}`, {
