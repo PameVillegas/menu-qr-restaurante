@@ -47,5 +47,16 @@ export const api = {
     update: (id: number, data: Partial<CreateProductDTO>) => fetchApi<Product>(`/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id: number) => fetchApi<void>(`/products/${id}`, { method: 'DELETE' }),
   },
+  orders: {
+    create: (data: { table_number: string; client_name?: string; items: any[]; tip: number }) => 
+      fetchApi<{ order_id: number; table: string }>('/orders', { method: 'POST', body: JSON.stringify(data) }),
+    getByRestaurant: (restaurantId: number, status?: string) => 
+      fetchApi<any[]>(`/orders/restaurant/${restaurantId}${status ? `?status=${status}` : ''}`),
+    updateStatus: (orderId: number, status: string) => 
+      fetchApi<{ message: string }>(`/orders/${orderId}/status`, { method: 'PUT', body: JSON.stringify({ status }) }),
+    addReview: (orderId: number, data: { table_number: string; rating: number; comment?: string; tip_amount: number }) => 
+      fetchApi<{ review_id: number }>(`/orders/${orderId}/review`, { method: 'POST', body: JSON.stringify(data) }),
+    getReviews: () => fetchApi<any[]>('/orders/reviews'),
+  },
 };
  

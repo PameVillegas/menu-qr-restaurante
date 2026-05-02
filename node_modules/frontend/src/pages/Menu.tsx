@@ -103,26 +103,18 @@ const [table, setTable] = useState(tableNumber || '');
         quantity: item.quantity,
       }));
 
-      const res = await fetch('http://localhost:3000/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          table_number: table,
-          client_name: clientName || table,
-          items,
-          tip,
-        }),
+      const data = await api.orders.create({
+        table_number: table,
+        client_name: clientName || table,
+        items,
+        tip,
       });
 
-      const data = await res.json();
-      if (data.success) {
-        setLastOrderId(data.data.order_id);
-        setOrderPlaced(true);
-      } else {
-        alert(data.error || 'Error al hacer el pedido');
-      }
-    } catch (err) {
-      alert('Error al hacer el pedido');
+      setLastOrderId(data.order_id);
+      setOrderPlaced(true);
+    } catch (err: any) {
+      alert(err.message || 'Error al hacer el pedido');
+      console.error('Error placing order:', err);
     } finally {
       setOrdering(false);
     }
@@ -132,15 +124,11 @@ const [table, setTable] = useState(tableNumber || '');
     if (!lastOrderId) return;
 
     try {
-      await fetch(`http://localhost:3000/api/orders/${lastOrderId}/review`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          table_number: table,
-          rating,
-          comment: reviewComment,
-          tip_amount: tip,
-        }),
+      await api.orders.addReview(lastOrderId, {
+        table_number: table,
+        rating,
+        comment: reviewComment,
+        tip_amount: tip,
       });
       setShowReview(false);
       setCart([]);
@@ -148,7 +136,8 @@ const [table, setTable] = useState(tableNumber || '');
       setOrderPlaced(false);
       alert('Gracias por tu reseña!');
     } catch (err) {
-      console.error(err);
+      console.error('Error submitting review:', err);
+      alert('Error al enviar la reseña');
     }
   };
 

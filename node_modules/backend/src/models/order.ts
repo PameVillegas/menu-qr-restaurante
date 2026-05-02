@@ -14,23 +14,36 @@ export const orderModel = {
     const result = await query('SELECT * FROM orders WHERE id = $1', [id]);
     return (result.rows[0] as Order) || null;
   },
-  create: async (tableId: number, tableNumber: number, items: OrderItem[], tip: number): Promise<number> => {
+  create: async (tableId: number, tableNumber: number, items: any[], tip: number): Promise<number> => {
     const client = await getClient();
     try {
       await client.query('BEGIN');
-      const total = items.reduce((sum, item) => sum + item.subtotal, 0);
+      
+      // Calculate total from items
+      const total = items.reduce((sum, item) => {
+        const subtotal = Number(item.price) * Number(item.quantity);
+        return sum + subtotal;
+      }, 0);
+      
       const result = await client.query(
         `INSERT INTO orders (restaurant_id, table_id, customer_name, status, total, tip_amount) 
          VALUES (1, $1, 'Cliente', 'pending', $2, $3) RETURNING id`,
         [tableId, total, tip]
       );
       const orderId = result.rows[0].id;
+      
+      // Insert order items
       for (const item of items) {
+        const unitPrice = Number(item.price);
+        const quantity = Number(item.quantity);
+        const subtotal = unitPrice * quantity;
+        
         await client.query(
           'INSERT INTO order_items (order_id, product_id, product_name, quantity, unit_price, subtotal) VALUES ($1, $2, $3, $4, $5, $6)',
-          [orderId, item.product_id, item.product_name, item.quantity, item.unit_price, item.subtotal]
+          [orderId, item.product_id, item.name, quantity, unitPrice, subtotal]
         );
       }
+      
       await client.query('COMMIT');
       return orderId;
     } catch (e) {
