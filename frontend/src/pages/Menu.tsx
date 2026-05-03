@@ -80,6 +80,10 @@ const [table, setTable] = useState(tableNumber || '');
     });
   };
 
+  const deleteFromCart = (productId: number) => {
+    setCart((prev) => prev.filter((item) => item.product.id !== productId));
+  };
+
   const getSubtotal = () => {
     return cart.reduce((sum, item) => sum + Number(item.product.price) * item.quantity, 0);
   };
@@ -219,11 +223,45 @@ const [table, setTable] = useState(tableNumber || '');
           <div className="bg-white rounded-xl p-4">
             <h3 className="font-semibold mb-3">Tu pedido</h3>
             {cart.map((item) => (
-              <div key={item.product.id} className="flex justify-between py-2">
-                <span>{item.quantity}x {item.product.name}</span>
-                <span>${(Number(item.product.price) * item.quantity).toFixed(2)}</span>
+              <div key={item.product.id} className="flex justify-between items-center py-2 border-b last:border-0">
+                <div className="flex-1">
+                  <span className="font-medium">{item.product.name}</span>
+                  <div className="text-sm text-gray-500">
+                    ${Number(item.product.price).toFixed(2)} c/u
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-2 py-1">
+                    <button
+                      onClick={() => removeFromCart(item.product.id)}
+                      className="w-6 h-6 bg-white rounded text-gray-700 font-bold"
+                    >
+                      -
+                    </button>
+                    <span className="w-8 text-center font-medium">{item.quantity}</span>
+                    <button
+                      onClick={() => addToCart(item.product)}
+                      className="w-6 h-6 bg-white rounded text-gray-700 font-bold"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => deleteFromCart(item.product.id)}
+                    className="text-red-500 hover:text-red-700 text-sm"
+                  >
+                    ✕
+                  </button>
+                  <span className="w-16 text-right font-semibold">
+                    ${(Number(item.product.price) * item.quantity).toFixed(2)}
+                  </span>
+                </div>
               </div>
             ))}
+            <div className="pt-3 mt-3 border-t flex justify-between font-semibold">
+              <span>Subtotal</span>
+              <span>${getSubtotal().toFixed(2)}</span>
+            </div>
           </div>
 
           <div className="bg-white rounded-xl p-4">
@@ -233,7 +271,7 @@ const [table, setTable] = useState(tableNumber || '');
                 <button
                   key={t}
                   onClick={() => setTip(t)}
-                  className={`px-4 py-2 rounded-lg ${tip === t ? 'bg-emerald-500 text-white' : 'bg-gray-100'}`}
+                  className={`px-4 py-2 rounded-lg ${tip === t ? 'bg-blue-500 text-white' : 'bg-gray-100'}`}
                 >
                   ${t || 'Sin propina'}
                 </button>
@@ -250,10 +288,10 @@ const [table, setTable] = useState(tableNumber || '');
 
           <button
             onClick={handlePlaceOrder}
-            disabled={ordering}
-            className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold"
+            disabled={ordering || cart.length === 0}
+            className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold disabled:opacity-50"
           >
-            {ordering ? 'Enviando...' : 'Hacer Pedido'}
+            {ordering ? 'Enviando...' : 'Confirmar Pedido'}
           </button>
         </div>
       </div>

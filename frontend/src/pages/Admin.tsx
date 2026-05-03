@@ -36,6 +36,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [searchTable, setSearchTable] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,6 +128,12 @@ export default function Admin() {
   };
 
   const updateOrderStatus = async (orderId: number, status: string) => {
+    if (status === 'cancelled') {
+      if (!confirm('¿Estás seguro que querés cancelar este pedido?')) {
+        return;
+      }
+    }
+    
     try {
       await api.orders.updateStatus(orderId, status);
       loadOrders();
@@ -151,6 +158,32 @@ export default function Admin() {
     };
     return colors[status] || 'bg-gray-100';
   };
+
+  const getStats = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const todayOrders = orders.filter(o => {
+      const orderDate = new Date(o.created_at);
+      return orderDate >= today && o.status !== 'cancelled';
+    });
+    
+    const totalToday = todayOrders.reduce((sum, o) => sum + Number(o.total) + Number(o.tip || 0), 0);
+    
+    // Ventas por hora (últimas 24 horas)
+    const hourlyStats: { [hour: string]: number } = {};
+    todayOrders.forEach(o => {
+      const hour = new Date(o.created_at).getHours();
+      const hourKey = `${hour}:00`;
+      hourlyStats[hourKey] = (hourlyStats[hourKey] || 0) + Number(o.total) + Number(o.tip || 0);
+    });
+    
+    return { totalToday, todayOrders: todayOrders.length, hourlyStats };
+  };
+
+  const filteredOrders = searchTable 
+    ? orders.filter(o => o.table_number?.toString().includes(searchTable))
+    : orders;
 
   const createCategory = async () => {
     const name = prompt('Nombre de la categoría:');
@@ -288,13 +321,70 @@ export default function Admin() {
         <main className="flex-1 bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6">
           {activeTab === 'orders' && (
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Pedidos</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Pedidos</h2>
+              </div>
+
+              {/* Estadísticas */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="bg-blue-50 rounded-xl p-4">
+                  <p className="text-sm text-blue-600 font-medium">Ventas Hoy</p>
+                  <p className="text-2xl font-bold text-blue-900">${getStats().totalToday.toFixed(2)}</p>
+                </div>
+                <div className="bg-green-50 rounded-xl p-4">
+                  <p className="text-sm text-green-600 font-medium">Pedidos Hoy</p>
+                  <p className="text-2xl font-bold text-green-900">{getStats().todayOrders}</p>
+                </div>
+                <div className="bg-purple-50 rounded-xl p-4">
+                  <p className="text-sm text-purple-600 font-medium">Promedio</p>
+                  <p className="text-2xl font-bold text-purple-900">
+                    ${getStats().todayOrders > 0 ? (getStats().totalToday / getStats().todayOrders).toFixed(2) : '0.00'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Ventas por hora */}
+              {Object.keys(getStats().hourlyStats).length > 0 && (
+                <div className="bg-gray-50 rounded-xl p-4 mb-6">
+                  <h3 className="font-semibold text-gray-900 mb-3">Ventas por Hora (Hoy)</h3>
+                  <div className="space-y-2">
+                    {Object.entries(getStats().hourlyStats)
+                      .sort(([a], [b]) => parseInt(a) - parseInt(b))
+                      .map(([hour, amount]) => (
+                        <div key={hour} className="flex items-center gap-3">
+                          <span className="text-sm text-gray-600 w-12">{hour}</span>
+                          <div className="flex-1 bg-gray-200 rounded-full h-6 relative">
+                            <div 
+                              className="bg-blue-500 h-6 rounded-full flex items-center justify-end pr-2"
+                              style={{ width: `${Math.min((amount / getStats().totalToday) * 100, 100)}%` }}
+                            >
+                              <span className="text-xs text-white font-medium">${amount.toFixed(0)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Búsqueda por mesa */}
+              <div className="mb-4">
+                <input
+                  type="text"
+                  value={searchTable}
+                  onChange={(e) => setSearchTable(e.target.value)}
+                  placeholder="Buscar por número de mesa..."
+                  className="w-full px-4 py-2 border rounded-lg"
+                />
+              </div>
               
-              {orders.length === 0 ? (
-                <p className="text-gray-500">No hay pedidos aún.</p>
+              {filteredOrders.length === 0 ? (
+                <p className="text-gray-500">
+                  {searchTable ? 'No se encontraron pedidos para esa mesa.' : 'No hay pedidos aún.'}
+                </p>
               ) : (
                 <div className="space-y-4">
-                  {orders.map((order) => (
+                  {filteredOrders.map((order) => (
                     <div 
                       key={order.id} 
                       className={`border rounded-xl p-4 transition-all ${
