@@ -2,6 +2,23 @@ import { query } from './db.js';
 
 export async function seedTables() {
   try {
+    console.log('Verificando restaurante...');
+    
+    // Check if restaurant exists
+    const restaurantResult = await query('SELECT COUNT(*) as count FROM restaurants WHERE id = 1');
+    const restaurantCount = parseInt(restaurantResult.rows[0].count);
+    
+    if (restaurantCount === 0) {
+      console.log('Creando restaurante...');
+      await query(
+        `INSERT INTO restaurants (id, name, slug, description, phone, address, logo_url, banner_url, theme_primary, theme_secondary, is_active) 
+         VALUES (1, 'Mi Restaurante', 'mi-restaurante', 'Bienvenidos a nuestro restaurante', '+54 11 1234-5678', 'Calle Principal 123', '/logosarmiento.jpeg', '', '#10b981', '#059669', true)`
+      );
+      console.log('✅ Restaurante creado');
+    } else {
+      console.log(`✅ Restaurante ya existe`);
+    }
+    
     console.log('Verificando mesas...');
     
     // Check if tables exist
@@ -25,6 +42,6 @@ export async function seedTables() {
       console.log(`✅ Ya existen ${count} mesas`);
     }
   } catch (error: any) {
-    console.error('Error al crear mesas:', error.message);
+    console.error('Error en seed:', error.message);
   }
 }
