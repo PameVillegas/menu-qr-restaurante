@@ -224,7 +224,7 @@ export default function Admin() {
             {loginError && <p className="text-red-500 text-sm mb-4">{loginError}</p>}
             <button
               type="submit"
-              className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-medium"
+              className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium"
             >
               Ingresar
             </button>
@@ -248,7 +248,7 @@ export default function Admin() {
             <span className="text-xl font-bold text-gray-900">{restaurant?.name}</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link to="/menu" className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition">
+            <Link to="/menu" className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition">
               Ver Menú
             </Link>
             <button onClick={handleLogout} className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
@@ -267,7 +267,7 @@ export default function Admin() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
                   activeTab === tab.id
-                    ? 'bg-emerald-50 text-emerald-600'
+                    ? 'bg-blue-50 text-blue-600'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >
@@ -352,7 +352,7 @@ export default function Admin() {
                         {order.status === 'served' && (
                           <button
                             onClick={() => updateOrderStatus(order.id, 'paid')}
-                            className="px-3 py-1 bg-emerald-500 text-white rounded text-sm"
+                            className="px-3 py-1 bg-blue-500 text-white rounded text-sm"
                           >
                             Cobrar
                           </button>
@@ -379,7 +379,7 @@ export default function Admin() {
                 <h2 className="text-xl font-bold text-gray-900">Categorías</h2>
                 <button
                   onClick={createCategory}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
                 >
                   <Plus className="w-5 h-5" />
                   Nueva
@@ -405,7 +405,7 @@ export default function Admin() {
                 <h2 className="text-xl font-bold text-gray-900">Productos</h2>
                 <button
                   onClick={createProduct}
-                  className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
                 >
                   <Plus className="w-5 h-5" />
                   Nuevo
@@ -450,7 +450,7 @@ export default function Admin() {
                 <a 
                   href={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent('http://localhost:5173/')}`}
                   download="menu-qr.png"
-                  className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-medium flex items-center gap-2 mx-auto inline-block"
+                  className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium flex items-center gap-2 mx-auto inline-block"
                 >
                   <Download className="w-5 h-5" />
                   Descargar QR
@@ -474,7 +474,7 @@ export default function Admin() {
                       <a 
                         href={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`http://localhost:5173/menu/${n}`)}`}
                         download={`mesa-${n}-qr.png`}
-                        className="text-xs text-emerald-600 mt-1 block"
+                        className="text-xs text-blue-600 mt-1 block"
                       >
                         Descargar
                       </a>
@@ -531,7 +531,7 @@ export default function Admin() {
               <button 
                 onClick={saveRestaurant}
                 disabled={saving}
-                className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg disabled:opacity-50"
+                className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg disabled:opacity-50"
               >
                 {saving ? 'Guardando...' : 'Guardar Cambios'}
               </button>

@@ -151,7 +151,7 @@ const [table, setTable] = useState(tableNumber || '');
 
   if (orderPlaced) {
     return (
-      <div className="min-h-screen bg-emerald-500 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-blue-500 flex items-center justify-center p-4">
         <div className="text-center text-white">
           <CheckCircle className="w-20 h-20 mx-auto mb-4" />
           <h1 className="text-3xl font-bold mb-2">¡Pedido Confirmado!</h1>
@@ -161,7 +161,7 @@ const [table, setTable] = useState(tableNumber || '');
           {!showReview ? (
             <button
               onClick={() => setShowReview(true)}
-              className="px-8 py-3 bg-white text-emerald-600 rounded-xl font-semibold"
+              className="px-8 py-3 bg-white text-blue-600 rounded-xl font-semibold"
             >
               Dejar Reseña
             </button>
@@ -192,7 +192,7 @@ const [table, setTable] = useState(tableNumber || '');
               />
               <button
                 onClick={handleSubmitReview}
-                className="w-full px-4 py-2 bg-emerald-500 text-white rounded-lg"
+                className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg"
               >
                 Enviar
               </button>
@@ -251,7 +251,7 @@ const [table, setTable] = useState(tableNumber || '');
           <button
             onClick={handlePlaceOrder}
             disabled={ordering}
-            className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-semibold"
+            className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold"
           >
             {ordering ? 'Enviando...' : 'Hacer Pedido'}
           </button>
@@ -332,7 +332,7 @@ const [table, setTable] = useState(tableNumber || '');
                 onClick={() => setSelectedCategory(category.id)}
                 className={`px-4 py-2 rounded-full whitespace-nowrap transition ${
                   selectedCategory === category.id
-                    ? 'bg-emerald-500 text-white'
+                    ? 'bg-blue-500 text-white'
                     : 'bg-gray-100 text-gray-700'
                 }`}
               >
@@ -358,7 +358,7 @@ const [table, setTable] = useState(tableNumber || '');
                     {product.description && (
                       <p className="text-sm text-gray-500">{product.description}</p>
                     )}
-                    <span className="font-bold text-emerald-600">
+                    <span className="font-bold text-blue-600">
                       ${Number(product.price).toFixed(2)}
                     </span>
                   </div>
@@ -381,7 +381,7 @@ const [table, setTable] = useState(tableNumber || '');
                       disabled={!product.is_available}
                       className={`px-3 py-2 rounded-lg ${
                         product.is_available
-                          ? 'bg-emerald-500 text-white'
+                          ? 'bg-blue-500 text-white'
                           : 'bg-gray-200 text-gray-500'
                       }`}
                     >
@@ -406,7 +406,7 @@ const [table, setTable] = useState(tableNumber || '');
             </div>
             <button
               onClick={() => setShowCheckout(true)}
-              className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-semibold flex items-center gap-2"
+              className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold flex items-center gap-2"
             >
               <ShoppingCart className="w-5 h-5" />
               Pedir
