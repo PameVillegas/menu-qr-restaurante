@@ -15,10 +15,16 @@ router.post('/', async (req: Request, res: Response<ApiResponse<unknown>>) => {
 
     // Find table by number
     const tables = await tableModel.findByRestaurant(1);
-    const table = tables.find(t => t.number === String(table_number));
+    console.log('Available tables:', tables.map(t => ({ id: t.id, number: t.number, type: typeof t.number })));
+    console.log('Looking for table_number:', table_number, 'type:', typeof table_number);
+    
+    const table = tables.find(t => String(t.number) === String(table_number));
     
     if (!table) {
-      return res.status(404).json({ success: false, error: 'Mesa no encontrada' });
+      return res.status(404).json({ 
+        success: false, 
+        error: `Mesa no encontrada. Mesas disponibles: ${tables.map(t => t.number).join(', ')}` 
+      });
     }
 
     const orderItems = items.map((item: any) => ({
