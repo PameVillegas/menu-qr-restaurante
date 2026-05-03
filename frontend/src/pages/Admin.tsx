@@ -531,57 +531,82 @@ export default function Admin() {
 
           {activeTab === 'qr' && (
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-6">QR para Imprimir</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6">Código QR del Menú</h2>
               <p className="text-gray-600 mb-6">
-                Este código QR siempre lleva al menú. Imprimilo y pegalo en la puerta o entrada del restaurante.
+                Este es tu código QR único. Imprimilo y pegalo en todas tus mesas. Los clientes lo escanean e ingresan su número de mesa.
               </p>
               
-              <div className="bg-gray-100 rounded-xl p-8 text-center">
-                <div className="bg-white p-8 inline-block rounded-xl mb-6 shadow-lg">
-                  <img 
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(APP_URL)}`} 
-                    alt="QR Code" 
-                    className="w-48 h-48 mx-auto"
-                  />
-                  <p className="text-blue-600 font-mono text-sm font-bold mt-2 break-all">{APP_URL}</p>
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8">
+                <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md mx-auto">
+                  <div className="text-center mb-6">
+                    <img src="/logosarmiento.jpeg" alt="Logo" className="w-16 h-16 rounded-full mx-auto mb-3 border-2 border-blue-500" />
+                    <h3 className="text-2xl font-bold text-gray-900">Restaurante Sarmiento</h3>
+                    <p className="text-gray-600 text-sm">Escaneá para ver el menú</p>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded-xl border-4 border-blue-500 mb-4">
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(APP_URL)}`} 
+                      alt="QR Code" 
+                      className="w-full h-auto mx-auto"
+                    />
+                  </div>
+                  
+                  <div className="text-center">
+                    <p className="text-blue-600 font-mono text-xs font-bold break-all mb-2">{APP_URL}</p>
+                    <p className="text-gray-500 text-sm">📱 Escaneá con la cámara de tu celular</p>
+                  </div>
                 </div>
-                <p className="text-sm text-gray-600 mb-4">
-                  Escaneá para ver el menú completo
-                </p>
-                <a 
-                  href={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(APP_URL)}`}
-                  download="menu-qr.png"
-                  className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium flex items-center gap-2 mx-auto inline-block"
-                >
-                  <Download className="w-5 h-5" />
-                  Descargar QR
-                </a>
+                
+                <div className="mt-8 text-center space-y-3">
+                  <a 
+                    href={`https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${encodeURIComponent(APP_URL)}`}
+                    download="menu-qr-alta-calidad.png"
+                    className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold flex items-center gap-3 mx-auto inline-flex shadow-lg"
+                  >
+                    <Download className="w-6 h-6" />
+                    Descargar QR en Alta Calidad (1000x1000px)
+                  </a>
+                  
+                  <p className="text-sm text-gray-600">
+                    💡 Tip: Descargá en alta calidad para imprimir en tamaño grande sin perder nitidez
+                  </p>
+                </div>
               </div>
 
-              <div className="mt-8">
-                <h3 className="font-semibold text-gray-900 mb-4">QR por Mesa</h3>
-                <p className="text-gray-600 mb-4">
-                  Descargá el QR de cada mesa para que los clientes lo escaneen y ya tengan el número cargado.
+              <div className="mt-8 bg-blue-50 rounded-xl p-6">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  📋 Instrucciones para Imprimir
+                </h3>
+                <ol className="space-y-2 text-gray-700">
+                  <li className="flex gap-2">
+                    <span className="font-bold text-blue-600">1.</span>
+                    <span>Hacé clic en "Descargar QR en Alta Calidad"</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="font-bold text-blue-600">2.</span>
+                    <span>Abrí el archivo descargado (menu-qr-alta-calidad.png)</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="font-bold text-blue-600">3.</span>
+                    <span>Imprimilo en tamaño A4 o A5 (recomendado: 10x10cm mínimo)</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="font-bold text-blue-600">4.</span>
+                    <span>Plastificalo o ponelo en un portarretrato para protegerlo</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <span className="font-bold text-blue-600">5.</span>
+                    <span>Pegalo o apoyalo en cada mesa del restaurante</span>
+                  </li>
+                </ol>
+              </div>
+
+              <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                <p className="text-sm text-yellow-800">
+                  <strong>⚠️ Importante:</strong> Este QR es único y nunca cambia. Aunque modifiques productos, precios o categorías, 
+                  el QR siempre será el mismo. Los clientes verán automáticamente los cambios cuando lo escaneen.
                 </p>
-                <div className="grid grid-cols-5 gap-4">
-                  {Array.from({length: 20}, (_, i) => i + 1).map((n) => (
-                    <div key={n} className="bg-gray-100 rounded-xl p-4 text-center">
-                      <img 
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`${APP_URL}/menu/${n}`)}`}
-                        alt={`Mesa ${n}`}
-                        className="w-16 h-16 mx-auto mb-2"
-                      />
-                      <p className="text-sm font-medium">Mesa {n}</p>
-                      <a 
-                        href={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${APP_URL}/menu/${n}`)}`}
-                        download={`mesa-${n}-qr.png`}
-                        className="text-xs text-blue-600 mt-1 block"
-                      >
-                        Descargar
-                      </a>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           )}
