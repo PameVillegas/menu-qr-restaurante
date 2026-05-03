@@ -277,9 +277,10 @@ const [table, setTable] = useState(tableNumber || '');
   const { restaurant, menu } = menuData;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-300 to-blue-200">
+    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/fondoclub.jpg)' }}>
+      <div className="min-h-screen bg-black/40 backdrop-blur-sm">
       <header
-        className="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-12 px-4 shadow-lg"
+        className="bg-gradient-to-r from-blue-600/90 to-blue-500/90 text-white py-12 px-4 shadow-lg backdrop-blur-md"
       >
         <div className="max-w-lg mx-auto">
           <Link to="/" className="inline-flex items-center gap-2 text-white hover:text-blue-100 mb-4 font-medium">
@@ -300,7 +301,7 @@ const [table, setTable] = useState(tableNumber || '');
         </div>
       </header>
 
-      <div className="bg-white p-4 border-b">
+      <div className="bg-white p-4 border-b backdrop-blur-md bg-white/95">
           <div className="max-w-lg mx-auto space-y-2">
             <input
               type="text"
@@ -319,7 +320,7 @@ const [table, setTable] = useState(tableNumber || '');
           </div>
         </div>
 
-      <div className="sticky top-0 bg-white shadow-sm z-10">
+      <div className="sticky top-0 bg-white/95 backdrop-blur-md shadow-sm z-10">
         <div className="max-w-lg mx-auto px-4 py-3">
           <div className="flex gap-2 overflow-x-auto">
             {menu.map((category) => (
@@ -345,10 +346,10 @@ const [table, setTable] = useState(tableNumber || '');
             key={category.id}
             className={selectedCategory === category.id ? 'block' : 'hidden'}
           >
-            <h2 className="text-lg font-bold text-gray-900 mb-3">{category.name}</h2>
+            <h2 className="text-lg font-bold text-white mb-3 drop-shadow-lg">{category.name}</h2>
             <div className="space-y-3">
               {category.products?.map((product) => (
-                <div key={product.id} className="bg-white rounded-xl p-4 shadow-md flex justify-between items-center">
+                <div key={product.id} className="bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-lg flex justify-between items-center">
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900">{product.name}</h3>
                     {product.description && (
@@ -392,7 +393,7 @@ const [table, setTable] = useState(tableNumber || '');
       </main>
 
       {cart.length > 0 && table && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4">
+        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t shadow-lg p-4">
           <div className="max-w-lg mx-auto flex items-center justify-between">
             <div>
               <p className="text-gray-600 text-sm">
@@ -410,6 +411,7 @@ const [table, setTable] = useState(tableNumber || '');
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
