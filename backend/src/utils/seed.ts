@@ -31,8 +31,8 @@ export async function seedTables() {
       // Create 20 tables
       for (let i = 1; i <= 20; i++) {
         await query(
-          'INSERT INTO tables (restaurant_id, number, capacity, status) VALUES ($1, $2, $3, $4)',
-          [1, String(i), 4, 'available']
+          'INSERT INTO tables (restaurant_id, number, is_active) VALUES ($1, $2, $3)',
+          [1, i, true]
         );
         console.log(`✅ Mesa ${i} creada`);
       }
@@ -46,8 +46,8 @@ export async function seedTables() {
         console.log(`Creando mesas adicionales (${count + 1} a 20)...`);
         for (let i = count + 1; i <= 20; i++) {
           await query(
-            'INSERT INTO tables (restaurant_id, number, capacity, status) VALUES ($1, $2, $3, $4)',
-            [1, String(i), 4, 'available']
+            'INSERT INTO tables (restaurant_id, number, is_active) VALUES ($1, $2, $3)',
+            [1, i, true]
           );
           console.log(`✅ Mesa ${i} creada`);
         }
