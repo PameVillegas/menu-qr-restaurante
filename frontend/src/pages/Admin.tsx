@@ -10,6 +10,7 @@ import { Category, Product } from '../types';
 const RESTAURANT_ID = 1;
 const RESTAURANT_SLUG = 'restaurante-sarmiento';
 const ADMIN_PASSWORD = 'admin123';
+const APP_URL = 'https://menu-qr-prod-final.vercel.app';
 
 interface Order {
   id: number;
@@ -448,17 +449,17 @@ export default function Admin() {
               <div className="bg-gray-100 rounded-xl p-8 text-center">
                 <div className="bg-white p-8 inline-block rounded-xl mb-6 shadow-lg">
                   <img 
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent('http://localhost:5173/')}`} 
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(APP_URL)}`} 
                     alt="QR Code" 
                     className="w-48 h-48 mx-auto"
                   />
-                  <p className="text-emerald-600 font-mono text-lg font-bold mt-2">http://localhost:5173/</p>
+                  <p className="text-blue-600 font-mono text-sm font-bold mt-2 break-all">{APP_URL}</p>
                 </div>
                 <p className="text-sm text-gray-600 mb-4">
                   Escaneá para ver el menú completo
                 </p>
                 <a 
-                  href={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent('http://localhost:5173/')}`}
+                  href={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(APP_URL)}`}
                   download="menu-qr.png"
                   className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium flex items-center gap-2 mx-auto inline-block"
                 >
@@ -476,13 +477,13 @@ export default function Admin() {
                   {Array.from({length: 20}, (_, i) => i + 1).map((n) => (
                     <div key={n} className="bg-gray-100 rounded-xl p-4 text-center">
                       <img 
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`http://localhost:5173/menu/${n}`)}`}
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`${APP_URL}/menu/${n}`)}`}
                         alt={`Mesa ${n}`}
                         className="w-16 h-16 mx-auto mb-2"
                       />
                       <p className="text-sm font-medium">Mesa {n}</p>
                       <a 
-                        href={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`http://localhost:5173/menu/${n}`)}`}
+                        href={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`${APP_URL}/menu/${n}`)}`}
                         download={`mesa-${n}-qr.png`}
                         className="text-xs text-blue-600 mt-1 block"
                       >
