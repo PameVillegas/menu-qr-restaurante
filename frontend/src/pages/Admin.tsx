@@ -100,11 +100,8 @@ export default function Admin() {
 
   const loadOrders = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/orders/restaurant/1');
-      const data = await res.json();
-      if (data.success) {
-        setOrders(data.data);
-      }
+      const data = await api.orders.getByRestaurant(RESTAURANT_ID);
+      setOrders(data);
     } catch (err) {
       console.error('Error loading orders:', err);
     }
@@ -130,11 +127,7 @@ export default function Admin() {
 
   const updateOrderStatus = async (orderId: number, status: string) => {
     try {
-      await fetch(`http://localhost:3000/api/orders/${orderId}/status`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
+      await api.orders.updateStatus(orderId, status);
       loadOrders();
     } catch (err) {
       console.error('Error updating order:', err);

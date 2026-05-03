@@ -27,6 +27,10 @@ async function start() {
   await runMigrations();
   console.log('Migrations complete. Starting server...');
   
+  // Seed tables if they don't exist
+  const { seedTables } = await import('./utils/seed.js');
+  await seedTables();
+  
   app.listen(config.port, () => {
     console.log(`🚀 Server running on port ${config.port}`);
     console.log(`📝 Environment: ${config.nodeEnv}`);
