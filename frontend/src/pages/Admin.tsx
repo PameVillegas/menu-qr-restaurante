@@ -189,7 +189,7 @@ export default function Admin() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center">
         <div className="text-white">Cargando...</div>
       </div>
     );
@@ -197,7 +197,7 @@ export default function Admin() {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center">
         <div className="bg-white rounded-2xl p-8 w-full max-w-md">
           <div className="text-center mb-8">
             <img src="/logosarmiento.jpeg" alt="Logo" className="w-20 h-20 rounded-full mx-auto mb-4" />
@@ -240,7 +240,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
       <header className="bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -436,7 +436,7 @@ export default function Admin() {
               </p>
               
               <div className="bg-gray-100 rounded-xl p-8 text-center">
-                <div className="bg-white p-8 inline-block rounded-xl mb-6">
+                <div className="bg-white p-8 inline-block rounded-xl mb-6 shadow-lg">
                   <img 
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent('http://localhost:5173/')}`} 
                     alt="QR Code" 
@@ -463,7 +463,7 @@ export default function Admin() {
                   Descargá el QR de cada mesa para que los clientes lo escaneen y ya tengan el número cargado.
                 </p>
                 <div className="grid grid-cols-5 gap-4">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                  {Array.from({length: 20}, (_, i) => i + 1).map((n) => (
                     <div key={n} className="bg-gray-100 rounded-xl p-4 text-center">
                       <img 
                         src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`http://localhost:5173/menu/${n}`)}`}

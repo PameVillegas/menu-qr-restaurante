@@ -277,7 +277,7 @@ const [table, setTable] = useState(tableNumber || '');
   const { restaurant, menu } = menuData;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
       <header
         className="bg-cover bg-center text-white py-12 px-4"
         style={{
@@ -352,7 +352,7 @@ const [table, setTable] = useState(tableNumber || '');
             <h2 className="text-lg font-bold text-gray-900 mb-3">{category.name}</h2>
             <div className="space-y-3">
               {category.products?.map((product) => (
-                <div key={product.id} className="bg-white rounded-xl p-4 flex justify-between items-center">
+                <div key={product.id} className="bg-white rounded-xl p-4 shadow-md flex justify-between items-center">
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900">{product.name}</h3>
                     {product.description && (
