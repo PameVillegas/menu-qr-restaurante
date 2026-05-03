@@ -8,7 +8,7 @@ import { api } from '../services/api';
 import { Category, Product } from '../types';
 
 const RESTAURANT_ID = 1;
-const RESTAURANT_SLUG = 'mi-restaurante';
+const RESTAURANT_SLUG = 'restaurante-sarmiento';
 const ADMIN_PASSWORD = 'admin123';
 
 interface Order {
