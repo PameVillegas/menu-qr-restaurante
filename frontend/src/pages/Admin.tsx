@@ -240,8 +240,9 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-white">
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/fondoclub.jpg)' }}>
+      <div className="min-h-screen bg-black/40 backdrop-blur-sm">
+      <header className="bg-white/95 backdrop-blur-md shadow-sm">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/logosarmiento.jpeg" alt="Logo" className="w-10 h-10 rounded-full object-cover" />
@@ -259,7 +260,7 @@ export default function Admin() {
       </header>
 
       <div className="max-w-6xl mx-auto px-4 py-6 flex gap-6">
-        <aside className="w-64 bg-white rounded-xl shadow-sm p-4 h-fit">
+        <aside className="w-64 bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-4 h-fit">
           <nav className="space-y-1">
             {tabs.map((tab) => (
               <button
@@ -283,7 +284,7 @@ export default function Admin() {
           </nav>
         </aside>
 
-        <main className="flex-1 bg-white rounded-xl shadow-sm p-6">
+        <main className="flex-1 bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6">
           {activeTab === 'orders' && (
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-6">Pedidos</h2>
@@ -293,9 +294,18 @@ export default function Admin() {
               ) : (
                 <div className="space-y-4">
                   {orders.map((order) => (
-                    <div key={order.id} className="border border-gray-200 rounded-xl p-4">
+                    <div 
+                      key={order.id} 
+                      className={`border rounded-xl p-4 transition-all ${
+                        order.status === 'paid' 
+                          ? 'border-gray-300 bg-gray-50/80 opacity-60' 
+                          : order.status === 'cancelled'
+                          ? 'border-red-300 bg-red-50/80 opacity-60'
+                          : 'border-gray-200 bg-white/95'
+                      }`}
+                    >
                       <div className="flex justify-between items-start mb-3">
-                        <div>
+                        <div className={order.status === 'paid' || order.status === 'cancelled' ? 'line-through' : ''}>
                           <span className="text-lg font-bold">Mesa {order.table_number}</span>
                           <span className="text-sm text-gray-500 ml-2 flex items-center gap-1">
                             <Clock className="w-4 h-4" />
@@ -316,7 +326,7 @@ export default function Admin() {
                         </div>
                       </div>
                       
-                      <div className="text-sm text-gray-600 mb-3">
+                      <div className={`text-sm text-gray-600 mb-3 ${order.status === 'paid' || order.status === 'cancelled' ? 'line-through' : ''}`}>
                         {order.items?.map((item: any) => (
                           <div key={item.id}>
                             {item.quantity}x {item.product_name} - ${item.subtotal}
@@ -540,6 +550,7 @@ export default function Admin() {
             </div>
           )}
         </main>
+      </div>
       </div>
     </div>
   );
