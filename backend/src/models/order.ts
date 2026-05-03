@@ -3,12 +3,28 @@ import { Order, OrderItem } from './types.js';
 
 export const orderModel = {
   findByRestaurant: async (restaurantId: number, status?: string): Promise<Order[]> => {
-    let sql = 'SELECT * FROM orders WHERE restaurant_id = $1';
-    if (status) sql += ' AND status = $2';
-    sql += ' ORDER BY created_at DESC';
+    let sql = `
+      SELECT o.*, t.number as table_number
+      FROM orders o
+      LEFT JOIN tables t ON o.table_id = t.id
+      WHERE o.restaurant_id = $1
+    `;
+    if (status) sql += ' AND o.status = $2';
+    sql += ' ORDER BY o.created_at DESC';
     const params = status ? [restaurantId, status] : [restaurantId];
     const result = await query(sql, params);
-    return result.rows as Order[];
+    
+    // Get items for each order
+    const orders = result.rows as Order[];
+    for (const order of orders) {
+      const itemsResult = await query(
+        'SELECT * FROM order_items WHERE order_id = $1',
+        [order.id]
+      );
+      (order as any).items = itemsResult.rows;
+    }
+    
+    return orders;
   },
   findById: async (id: number): Promise<Order | null> => {
     const result = await query('SELECT * FROM orders WHERE id = $1', [id]);
