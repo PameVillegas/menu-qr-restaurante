@@ -143,8 +143,8 @@ const [table, setTable] = useState(tableNumber || '');
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-300 to-blue-200 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -206,7 +206,7 @@ const [table, setTable] = useState(tableNumber || '');
   if (showCheckout) {
     const tipOptions = [0, 500, 1000, 2000];
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-300 to-blue-200 p-4">
         <header className="flex items-center justify-between mb-6">
           <button onClick={() => setShowCheckout(false)} className="p-2">
             <ArrowLeft className="w-6 h-6" />
@@ -262,11 +262,11 @@ const [table, setTable] = useState(tableNumber || '');
 
   if (error || !menuData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-300 to-blue-200 flex items-center justify-center p-4">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Ups!</h1>
-          <p className="text-gray-600 mb-4">{error || 'Menú no disponible'}</p>
-          <Link to="/admin" className="text-emerald-600 hover:underline">
+          <p className="text-gray-700 mb-4">{error || 'Menú no disponible'}</p>
+          <Link to="/admin" className="text-blue-600 hover:underline font-medium">
             Ir al Panel Admin
           </Link>
         </div>
@@ -277,16 +277,12 @@ const [table, setTable] = useState(tableNumber || '');
   const { restaurant, menu } = menuData;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-blue-300 to-blue-200">
       <header
-        className="bg-cover bg-center text-white py-12 px-4"
-        style={{
-          backgroundImage: restaurant.banner_url ? `url(${restaurant.banner_url})` : undefined,
-          backgroundColor: restaurant.banner_url ? undefined : restaurant.theme_primary,
-        }}
+        className="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-12 px-4 shadow-lg"
       >
         <div className="max-w-lg mx-auto">
-          <Link to="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4">
+          <Link to="/" className="inline-flex items-center gap-2 text-white hover:text-blue-100 mb-4 font-medium">
             <ArrowLeft className="w-5 h-5" />
             Volver
           </Link>
@@ -294,12 +290,12 @@ const [table, setTable] = useState(tableNumber || '');
             <img
               src={restaurant.logo_url}
               alt={restaurant.name}
-              className="w-16 h-16 rounded-full object-cover mb-3"
+              className="w-16 h-16 rounded-full object-cover mb-3 border-2 border-white shadow-lg"
             />
           )}
-          <h1 className="text-2xl font-bold mb-2">{restaurant.name}</h1>
+          <h1 className="text-3xl font-bold mb-2 text-white drop-shadow-lg">{restaurant.name}</h1>
           {restaurant.description && (
-            <p className="text-white/80 text-sm mb-3">{restaurant.description}</p>
+            <p className="text-blue-50 text-sm mb-3">{restaurant.description}</p>
           )}
         </div>
       </header>
