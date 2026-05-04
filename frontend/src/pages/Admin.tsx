@@ -326,7 +326,7 @@ export default function Admin() {
               </div>
 
               {/* Estadísticas */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                 <div className="bg-blue-50 rounded-xl p-4">
                   <p className="text-sm text-blue-600 font-medium">Ventas Hoy</p>
                   <p className="text-2xl font-bold text-blue-900">${getStats().totalToday.toFixed(2)}</p>
