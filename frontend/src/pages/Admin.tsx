@@ -37,6 +37,7 @@ export default function Admin() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [searchTable, setSearchTable] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -87,14 +88,16 @@ export default function Admin() {
 
   const loadData = async () => {
     setLoading(true);
+    setErrorMsg('');
     try {
       const r = await api.restaurants.getBySlug(RESTAURANT_SLUG);
       setRestaurant(r);
       await loadCategories();
       await loadProducts();
       await loadOrders();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error loading data:', err);
+      setErrorMsg('Error cargando datos: ' + (err.message || err));
     } finally {
       setLoading(false);
     }
@@ -104,8 +107,9 @@ export default function Admin() {
     try {
       const data = await api.orders.getByRestaurant(RESTAURANT_ID);
       setOrders(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error loading orders:', err);
+      setErrorMsg('Error cargando pedidos: ' + (err.message || err));
     }
   };
 
@@ -113,8 +117,9 @@ export default function Admin() {
     try {
       const data = await api.categories.getByRestaurant(RESTAURANT_ID);
       setCategories(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error loading categories:', err);
+      setErrorMsg('Error cargando categorías: ' + (err.message || err));
     }
   };
 
@@ -122,8 +127,9 @@ export default function Admin() {
     try {
       const data = await api.products.getByRestaurant(RESTAURANT_ID);
       setProducts(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error loading products:', err);
+      setErrorMsg('Error cargando productos: ' + (err.message || err));
     }
   };
 
@@ -294,6 +300,12 @@ export default function Admin() {
       </header>
 
       <div className="max-w-6xl mx-auto px-4 py-6 flex gap-6">
+        {errorMsg && (
+          <div className="fixed top-4 right-4 bg-red-500 text-white p-4 rounded-xl shadow-lg z-50 max-w-xs">
+            <p className="font-bold">Error:</p>
+            <p className="text-sm">{errorMsg}</p>
+          </div>
+        )}
         <aside className="w-64 bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-4 h-fit">
           <nav className="space-y-1">
             {tabs.map((tab) => (
