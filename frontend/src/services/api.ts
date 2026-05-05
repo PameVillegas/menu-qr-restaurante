@@ -3,13 +3,19 @@ import { ApiResponse, Restaurant, Category, Product, CreateRestaurantDTO, Create
 const API_BASE = import.meta.env.VITE_API_URL || 'https://menu-qr-rest.onrender.com/api';
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  const separator = endpoint.includes('?') ? '&' : '?';
+  const url = `${API_BASE}${endpoint}${separator}_cb=${Date.now()}`;
+  
+  const fetchOptions: RequestInit = {
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-  });
+    cache: 'no-cache',
+  };
+  
+  const response = await fetch(url, fetchOptions);
 
   const data: ApiResponse<T> = await response.json();
 
@@ -59,4 +65,3 @@ export const api = {
     getReviews: () => fetchApi<any[]>('/orders/reviews'),
   },
 };
- 
