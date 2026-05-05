@@ -30,7 +30,7 @@ export const orderModel = {
     const result = await query('SELECT * FROM orders WHERE id = $1', [id]);
     return (result.rows[0] as Order) || null;
   },
-  create: async (tableId: number, tableNumber: number, items: any[], tip: number): Promise<number> => {
+  create: async (tableId: number, tableNumber: number, items: any[], tip: number, clientName: string = 'Cliente'): Promise<number> => {
     const client = await getClient();
     try {
       await client.query('BEGIN');
@@ -43,8 +43,8 @@ export const orderModel = {
       
       const result = await client.query(
         `INSERT INTO orders (restaurant_id, table_id, customer_name, status, total, tip_amount) 
-         VALUES (1, $1, 'Cliente', 'pending', $2, $3) RETURNING id`,
-        [tableId, total, tip]
+         VALUES (1, $1, $2, 'pending', $3, $4) RETURNING id`,
+        [tableId, clientName, total, tip]
       );
       const orderId = result.rows[0].id;
       

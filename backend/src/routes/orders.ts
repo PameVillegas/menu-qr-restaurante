@@ -7,7 +7,7 @@ const router = Router();
 
 router.post('/', async (req: Request, res: Response<ApiResponse<unknown>>) => {
   try {
-    const { table_number, items, tip = 0 } = req.body;
+    const { table_number, client_name, items, tip = 0 } = req.body;
     
     if (!table_number || !items || items.length === 0) {
       return res.status(400).json({ success: false, error: 'Número de mesa y items requeridos' });
@@ -36,8 +36,8 @@ router.post('/', async (req: Request, res: Response<ApiResponse<unknown>>) => {
 
     console.log('Creating order for table:', table.id, table_number);
     
-    const orderId = await orderModel.create(table.id, table_number, orderItems, tip);
-
+    const orderId = await orderModel.create(table.id, table_number, orderItems, tip, client_name || 'Cliente');
+    
     res.status(201).json({ success: true, data: { order_id: orderId, table: table_number } });
   } catch (error: any) {
     console.error('Error creating order:', error.message, error.stack);
