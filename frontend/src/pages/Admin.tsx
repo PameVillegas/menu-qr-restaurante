@@ -16,6 +16,7 @@ interface Order {
   id: number;
   table_id: number;
   table_number: string;
+  client_name: string;
   total: string;
   tip: string;
   status: string;
@@ -410,6 +411,11 @@ export default function Admin() {
                       <div className="flex justify-between items-start mb-3">
                         <div className={order.status === 'paid' || order.status === 'cancelled' ? 'line-through' : ''}>
                           <span className="text-lg font-bold">Mesa {order.table_number}</span>
+                          {order.client_name && (
+                            <span className="text-sm text-gray-600 ml-2">
+                              ({order.client_name})
+                            </span>
+                          )}
                           <span className="text-sm text-gray-500 ml-2 flex items-center gap-1">
                             <Clock className="w-4 h-4" />
                             {getTime(order.created_at)}

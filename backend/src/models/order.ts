@@ -4,7 +4,7 @@ import { Order, OrderItem } from './types.js';
 export const orderModel = {
   findByRestaurant: async (restaurantId: number, status?: string): Promise<Order[]> => {
     let sql = `
-      SELECT o.*, t.number as table_number
+      SELECT o.*, t.number as table_number, o.client_name
       FROM orders o
       LEFT JOIN tables t ON o.table_id = t.id
       WHERE o.restaurant_id = $1
