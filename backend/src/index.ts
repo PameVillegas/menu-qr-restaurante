@@ -12,7 +12,10 @@ import { runMigrations } from './migrations/migrate.js';
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: config.cors.origin, credentials: true }));
+app.use(cors({ 
+  origin: '*', 
+  credentials: false 
+}));
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
