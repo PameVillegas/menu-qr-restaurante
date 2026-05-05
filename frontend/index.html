@@ -7,6 +7,24 @@
     <meta name="description" content="Menú Digital QR - Visualiza el menú del restaurante" />
     <meta name="theme-color" content="#0ea5e9" />
     <title>Restaurante Sarmiento - Menú QR</title>
+    <script>
+      // Desregistrar Service Workers para evitar caché
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+        });
+      }
+      // Limpiar caché del browser
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (let name of names) {
+            caches.delete(name);
+          }
+        });
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
